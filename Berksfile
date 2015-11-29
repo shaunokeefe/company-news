@@ -4,6 +4,7 @@ metadata
 
 # Uncomment to add fixture to your test kitchen tests
 #
-# group :integration do
+ group :integration do
+   cookbook 'apt'
 #   cookbook 'test', :path => './test/fixtures/cookbooks/test'
-# end
+ end

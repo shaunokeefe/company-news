@@ -14,22 +14,6 @@ platforms:
       customize:
         nictype1: virtio
 
-  - name: ec2-ubuntu-14.04
-    driver:
-      image_id: ami-69631053
-      flavor_id: "t2.micro"
-      username: ec2-user
-      region: ap-northeast-1
-      availability_zone: ap-northeast-1c
-      security_group_ids: ["<%= ENV['AWS_SECURITY_GROUP']%>"]
-      ssh_key: "<%= ENV['AWS_SSH_KEY']%>"
-    attributes:
-      apt:
-        compile_time_update: true
-      aws:
-        access_key: "<%= ENV['AWS_ACCESS_KEY_ID']%>"
-        secret_access_key: "<%= ENV['AWS_SECRET_ACCESS_KEY']%>"
-
 suites:
   - name: default
     run_list:

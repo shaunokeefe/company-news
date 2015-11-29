@@ -1,4 +1,6 @@
 require 'spec_helper'
+#https://github.com/test-kitchen/busser-serverspec#-usage
+require 'faraday'
 
 describe 'company-news::default' do
   describe 'should have java installed' do
@@ -40,5 +42,21 @@ describe 'company-news::default' do
     describe port(8080) do
         it { should be_listening.with('tcp') }
     end
+  end
+
+  describe 'should not be listening on 8443' do
+    describe port(8443) do
+        it { should_not be_listening.with('tcp') }
+    end
+  end
+
+  let (:conn) do
+    c = Faraday.new(:url => 'http://localhost:8080')
+    c
+  end
+
+  it 'should have webapp installed' do
+    res = conn.get('/sample/')
+    expect(res.status).to eq(200)
   end
 end

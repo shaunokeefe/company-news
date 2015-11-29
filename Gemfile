@@ -1,0 +1,11 @@
+source 'https://rubygems.org'
+
+gem 'berkshelf'
+gem 'test-kitchen', '1.3.1'
+gem 'kitchen-vagrant', '0.16.0'
+gem 'kitchen-openstack', '1.8.0'
+gem 'kitchen-ec2', '0.8.0'
+gem 'faraday'
+gem 'kitchen-sync'
+gem 'rubocop', '0.30.0'
+gem 'foodcritic', '4.0.0'

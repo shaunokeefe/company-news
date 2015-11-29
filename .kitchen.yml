@@ -1,0 +1,38 @@
+#<% require 'kitchen-sync' %>
+---
+provisioner:
+  name: chef_zero
+  chef_omnibus_url: https://www.chef.io/chef/install.sh
+
+platforms:
+  - name: vagrant-ubuntu-14.04
+    driver:
+      name: vagrant
+      box: ubuntu-1404
+      box_url: "http://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
+      box_sha1: 227e3a68fd7460a9bafcc59af208fa64994ae298e1187e5e0b3d987759128a99 
+      customize:
+        nictype1: virtio
+
+  - name: ec2-ubuntu-14.04
+    driver:
+      image_id: ami-69631053
+      flavor_id: "t2.micro"
+      username: ec2-user
+      region: ap-northeast-1
+      availability_zone: ap-northeast-1c
+      security_group_ids: ["<%= ENV['AWS_SECURITY_GROUP']%>"]
+      ssh_key: "<%= ENV['AWS_SSH_KEY']%>"
+    attributes:
+      apt:
+        compile_time_update: true
+      aws:
+        access_key: "<%= ENV['AWS_ACCESS_KEY_ID']%>"
+        secret_access_key: "<%= ENV['AWS_SECRET_ACCESS_KEY']%>"
+
+suites:
+  - name: default
+    run_list:
+      - recipe[company-news]
+    #roles_path: test/fixtures/roles
+    #data_bags_path: test/fixtures/data_bags

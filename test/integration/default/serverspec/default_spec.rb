@@ -50,13 +50,48 @@ describe 'company-news::default' do
     end
   end
 
-  let (:conn) do
-    c = Faraday.new(:url => 'http://localhost:8080')
-    c
+  describe 'should have webapp installed' do
+    let (:conn) do
+      c = Faraday.new(:url => 'http://localhost:8080')
+      c
+    end
+    it 'returns the sample page' do
+      res = conn.get('/sample/')
+      expect(res.status).to eq(200)
+    end
   end
 
-  it 'should have webapp installed' do
-    res = conn.get('/sample/')
-    expect(res.status).to eq(200)
+  describe 'nginx' do
+    let (:conn_ssl) do
+      c = Faraday.new(:url => 'https://localhost', :ssl => {:verify => false})
+      c
+    end
+
+    describe file('/etc/nginx/ssl/companynews.com/server.crt') do
+      it { should be_file }
+    end
+
+    describe file('/etc/nginx/ssl/companynews.com/server.key') do
+      it { should be_file }
+    end
+
+    describe port(80) do
+      it { should be_listening.with('tcp') }
+    end
+
+    describe port(443) do
+      it { should be_listening.with('tcp') }
+    end
+
+    describe file('/etc/nginx/sites-available/company_news') do
+      it { should be_file }
+      # proxy to the local tomcat server
+      its(:content) { should match(/^[^#]*proxy_pass http:\/\/localhost;/) }
+    end
+
+    it 'should be serving the sample page over https' do
+      res = conn_ssl.get('/sample/')
+      expect(res.status).to eq(200)
+    end
   end
 end

@@ -85,8 +85,16 @@ describe 'company-news::default' do
 
     describe file('/etc/nginx/sites-available/company_news') do
       it { should be_file }
-      # proxy to the local tomcat server
-      its(:content) { should match(/^[^#]*proxy_pass http:\/\/localhost;/) }
+      # proxy to the local tomcat server on port 8080
+      its(:content) { should match(/^[^#]*proxy_pass http:\/\/localhost:8080;/) }
+      # set header to point to original host
+      its(:content) { should match(/^[^#]*proxy_set_header Host \$host;/) }
+      # pass IP of client to proxied server
+      its(:content) { should match(/^[^#]*proxy_set_header X-Real-IP \$remote_addr;/) }
+      # give the proxied server a list of all servers that we've been proxied through
+      its(:content) { should match(/^[^#]*proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;/) }
+      # tell the proxied server whether the original request was http/https
+      its(:content) { should match(/^[^#]*proxy_set_header X-Forwarded-Proto \$scheme;/) }
     end
 
     it 'should be serving the sample page over https' do

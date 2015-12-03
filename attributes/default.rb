@@ -1,1 +1,1 @@
-# e.g. default['company-news']['attribute'] = 'value'
+default['company-news']['nginx']['app_server_ips'] = ['localhost']

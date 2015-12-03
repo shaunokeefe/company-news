@@ -63,7 +63,7 @@ describe 'company-news::default' do
 
   describe 'nginx' do
     let (:conn_ssl) do
-      c = Faraday.new(:url => 'https://localhost', :ssl => {:verify => false})
+      c = Faraday.new(:url => 'https://localhost:443', :ssl => {:verify => false})
       c
     end
 
@@ -81,6 +81,14 @@ describe 'company-news::default' do
 
     describe port(443) do
       it { should be_listening.with('tcp') }
+    end
+
+    describe file('/etc/nginx/sites-enabled/default') do
+      it { should_not be_file }
+    end
+
+    describe file('/etc/nginx/sites-enabled/company_news') do
+      it { should be_linked_to '/etc/nginx/sites-available/company_news'}
     end
 
     describe file('/etc/nginx/sites-available/company_news') do

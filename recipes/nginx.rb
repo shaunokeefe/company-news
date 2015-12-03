@@ -25,12 +25,13 @@ end
   end
 end
 
+certs_databag =  data_bag_item('companynews', 'certs')
 %w(crt key).each do |ext|
-  cookbook_file "/etc/nginx/ssl/companynews.com/server.#{ext}" do
-    source "server.#{ext}"
+  file "/etc/nginx/ssl/companynews.com/server.#{ext}" do
     owner node['nginx']['user']
     group node['nginx']['group']
     action :create
     mode '0600'
+    content certs_databag[ext]
   end
 end

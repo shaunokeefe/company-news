@@ -5,7 +5,6 @@ driver:
   region: ap-northeast-1
   availability_zone: ap-northeast-1c
   require_chef_omnibus: true
-  instance_type: t2.small
   associate_public_ip: true
 
   transport:
